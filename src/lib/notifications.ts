@@ -2,6 +2,11 @@ import { db } from '@/lib/db'
 import { sendEmail, getOverdueTaskEmailHtml, getOverdueTaskEmailText } from '@/lib/email'
 import { isPast, isToday, subDays } from 'date-fns'
 
+// Helper function to add delay between API calls
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export async function checkAndSendOverdueNotifications() {
   try {
     console.log('🔔 Checking for overdue tasks...')
@@ -33,7 +38,9 @@ export async function checkAndSendOverdueNotifications() {
 
     const results = []
 
-    for (const todo of overdueTodos) {
+    for (let i = 0; i < overdueTodos.length; i++) {
+      const todo = overdueTodos[i]
+
       // Check if user has a valid email
       if (!todo.user.email) {
         console.log(`⚠️  Skipping todo ${todo.id} - user has no email`)
@@ -80,6 +87,7 @@ export async function checkAndSendOverdueNotifications() {
         userId: todo.user.id,
         email: todo.user.email,
         success: result.success,
+        error: result.success ? undefined : result.error,
       })
 
       // Log the notification in activity
@@ -96,6 +104,27 @@ export async function checkAndSendOverdueNotifications() {
             },
           },
         })
+      } else {
+        // Log failed attempts too
+        await db.activity.create({
+          data: {
+            type: 'UPDATED',
+            description: `Failed to send overdue notification for "${todo.title}"`,
+            userId: todo.user.id,
+            todoId: todo.id,
+            metadata: {
+              notificationType: 'overdue_failed',
+              sentAt: new Date().toISOString(),
+              error: result.error,
+            },
+          },
+        })
+      }
+
+      // Rate limiting: Wait 600ms between emails to stay under 2 requests/second
+      // This prevents hitting Resend's rate limit
+      if (i < overdueTodos.length - 1) {
+        await delay(600)
       }
     }
 

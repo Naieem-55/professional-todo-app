@@ -41,8 +41,14 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
         text,
       })
 
-      console.log('Email sent via Resend:', data)
-      return { success: true, data }
+      // Check if Resend returned an error
+      if (data.error) {
+        console.error('Email failed via Resend:', data.error)
+        return { success: false, error: data.error }
+      }
+
+      console.log('Email sent via Resend:', data.data)
+      return { success: true, data: data.data }
     } else if (EMAIL_SERVICE === 'smtp' && transporter) {
       // Send via SMTP (Nodemailer)
       const info = await transporter.sendMail({

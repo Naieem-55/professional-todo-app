@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { createTodoSchema, type CreateTodoInput } from '@/lib/validations/todo.schema'
 import { createTodo, updateTodo, getCategories, getTags } from '@/lib/actions/todo.actions'
 import { useToast } from '@/components/ui/use-toast'
@@ -160,39 +161,35 @@ export function TodoFormDialog({ open, onOpenChange, todo }: TodoFormDialogProps
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Input
-                id="dueDate"
-                type="datetime-local"
-                {...register('dueDate', {
-                  setValueAs: (value) => (value ? new Date(value) : null),
-                })}
-                disabled={isLoading}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="dueDate">Due Date & Time</Label>
+            <DateTimePicker
+              date={watch('dueDate')}
+              setDate={(date) => setValue('dueDate', date)}
+              disabled={isLoading}
+              placeholder="Pick a date and time"
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select
-                value={watch('categoryId') || 'none'}
-                onValueChange={(value) => setValue('categoryId', value === 'none' ? null : value)}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No category</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.icon} {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="category">Category</Label>
+            <Select
+              value={watch('categoryId') || 'none'}
+              onValueChange={(value) => setValue('categoryId', value === 'none' ? null : value)}
+              disabled={isLoading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No category</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.icon} {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex justify-end gap-2">

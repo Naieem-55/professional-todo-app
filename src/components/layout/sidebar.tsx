@@ -4,13 +4,18 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { CheckSquare, Share2, Trash2, Activity, ListTodo } from 'lucide-react'
+import { CheckSquare, Share2, Trash2, Activity, ListTodo, CheckCircle2 } from 'lucide-react'
 
 const routes = [
   {
     label: 'All Todos',
     icon: CheckSquare,
     href: '/todos',
+  },
+  {
+    label: 'Completed Todos',
+    icon: CheckCircle2,
+    href: '/todos/completed',
   },
   {
     label: 'Shared with me',

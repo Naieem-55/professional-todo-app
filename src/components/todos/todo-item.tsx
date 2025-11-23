@@ -70,14 +70,19 @@ export function TodoItem({ todo, onEdit }: TodoItemProps) {
   const completedSubtasks = todo.subtasks?.filter((st) => st.isCompleted).length || 0
   const totalSubtasks = todo.subtasks?.length || 0
 
+  // Determine card styling based on status
+  const isCompleted = todo.status === TodoStatus.COMPLETED
+  const isTaskOverdue = todo.dueDate && isOverdue(todo.dueDate) && !isCompleted
+
   return (
     <Card className={cn(
       'p-4 hover:shadow-md transition-shadow',
-      todo.status === TodoStatus.COMPLETED && 'opacity-60'
+      isCompleted && 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900',
+      isTaskOverdue && 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900'
     )}>
       <div className="flex items-start gap-3">
         <Checkbox
-          checked={todo.status === TodoStatus.COMPLETED}
+          checked={isCompleted}
           onCheckedChange={handleToggle}
           disabled={isLoading}
           className="mt-1"
@@ -85,16 +90,20 @@ export function TodoItem({ todo, onEdit }: TodoItemProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1">
-              <h3
-                className={cn(
-                  'font-medium text-lg',
-                  todo.status === TodoStatus.COMPLETED && 'line-through text-muted-foreground'
-                )}
-              >
+              <h3 className={cn(
+                'font-medium text-lg',
+                isCompleted && 'text-green-700 dark:text-green-400',
+                isTaskOverdue && 'text-red-700 dark:text-red-400'
+              )}>
                 {todo.title}
               </h3>
               {todo.description && (
-                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                <p className={cn(
+                  'text-sm mt-1 line-clamp-2',
+                  isCompleted && 'text-green-600 dark:text-green-500',
+                  isTaskOverdue && 'text-red-600 dark:text-red-500',
+                  !isCompleted && !isTaskOverdue && 'text-muted-foreground'
+                )}>
                   {todo.description}
                 </p>
               )}
