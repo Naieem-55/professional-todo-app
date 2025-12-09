@@ -1,443 +1,396 @@
 # Professional Todo Application
 
-A complete, production-quality todo application built with Next.js 14, React, TypeScript, TailwindCSS, Prisma, and PostgreSQL.
+[![Next.js 14](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.0-2D3748.svg)](https://www.prisma.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+A production-quality todo application built with Next.js 14, featuring authentication, real-time updates, sharing, and activity logging.
 
 ## Features
 
-### Core Features ✅
-- ✨ Create, update, delete todos
-- ✅ Mark todo complete/incomplete
-- 📅 Add due dates
-- 🎯 Priority levels (Low, Medium, High)
-- 🏷️ Tags and categories
-- 📝 Subtasks
-- 📄 Rich text descriptions
-- 🔍 Advanced search & filtering
-- 📱 Fully responsive (mobile-first design)
-- 🌓 Dark & light theme
-- ⌨️ Keyboard shortcuts
+### Core Functionality
+- Create, update, and delete todos
+- Mark items complete with visual feedback
+- Due dates and priority levels (High, Medium, Low)
+- Tags and categories for organization
+- Subtasks for complex items
 
-### Advanced Features ✅
-- 🔐 User authentication (Email + Google OAuth)
-- 👥 Multi-user support
-- 🔄 Real-time updates via Server Actions
-- 🗑️ Soft delete with trash/restore
-- 📊 Activity logging
-- 🤝 Share todos with permissions (view/edit)
-- 💾 PostgreSQL database with Prisma ORM
-- 🎨 Professional UI with shadcn/ui
+### Advanced Features
+- **User Authentication**: Email + Google OAuth via NextAuth.js v5
+- **Multi-User Support**: Share todos with other users
+- **Real-Time Updates**: Server Actions for instant feedback
+- **Soft Deletes**: Recover accidentally deleted items
+- **Activity Logging**: Track all changes
+- **Dark & Light Mode**: Theme switching
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** TailwindCSS + shadcn/ui
-- **Database:** PostgreSQL
-- **ORM:** Prisma
-- **Authentication:** NextAuth.js v5 (Auth.js)
-- **State Management:** React Query + Server Actions
-- **Validation:** Zod
-- **Form Management:** React Hook Form
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Auth | NextAuth.js v5 |
+| UI | TailwindCSS + shadcn/ui |
+| Validation | Zod |
+| Forms | React Hook Form |
 
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-- Node.js 18+
-- PostgreSQL database
-- npm or yarn or pnpm
-
-## Installation & Setup
-
-### 1. Clone the repository (or use existing files)
+## Quick Start
 
 ```bash
-cd C:\projects\Todo
-```
+# Clone the repository
+git clone https://github.com/Naieem-55/professional-todo-app.git
+cd professional-todo-app
 
-### 2. Install dependencies
-
-```bash
+# Install dependencies
 npm install
-```
 
-### 3. Set up environment variables
-
-Create a `.env` file in the root directory:
-
-```bash
+# Set up environment variables
 cp .env.example .env
+# Edit .env with your database URL and auth secrets
+
+# Set up database
+npx prisma generate
+npx prisma db push
+npx prisma db seed
+
+# Run development server
+npm run dev
 ```
 
-Edit `.env` and add your configuration:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Environment Variables
+
+Create a `.env` file with:
 
 ```env
 # Database
-DATABASE_URL="postgresql://username:password@localhost:5432/todo_db?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/todo_db"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-super-secret-key-change-this-in-production"
+NEXTAUTH_SECRET="your-secret-key-here"
 
 # Google OAuth (optional)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ```
 
-### 4. Set up the database
-
-```bash
-# Generate Prisma Client
-npm run db:generate
-
-# Push schema to database (creates tables)
-npm run db:push
-
-# Seed the database with sample data
-npm run db:seed
-```
-
-### 5. Run the development server
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### 6. Login with demo account
-
-```
-Email: john@example.com
-Password: password123
-```
-
 ## Project Structure
 
 ```
-todo-app/
+professional-todo-app/
+├── app/
+│   ├── (auth)/           # Auth pages (login, register)
+│   ├── (dashboard)/      # Protected dashboard routes
+│   ├── api/              # API routes
+│   └── layout.tsx        # Root layout
+├── components/
+│   ├── ui/               # shadcn/ui components
+│   ├── todos/            # Todo-specific components
+│   └── shared/           # Shared components
+├── lib/
+│   ├── auth.ts           # Auth configuration
+│   ├── db.ts             # Prisma client
+│   └── validations.ts    # Zod schemas
 ├── prisma/
-│   ├── schema.prisma          # Database schema
-│   └── seed.ts                # Seed data script
-├── src/
-│   ├── app/                   # Next.js App Router pages
-│   │   ├── (auth)/           # Auth pages (login, register)
-│   │   ├── (dashboard)/      # Dashboard pages (todos, activity, etc.)
-│   │   ├── api/              # API routes
-│   │   ├── layout.tsx        # Root layout
-│   │   └── page.tsx          # Home page
-│   ├── components/           # React components
-│   │   ├── auth/            # Authentication components
-│   │   ├── layout/          # Layout components (sidebar, header)
-│   │   ├── todos/           # Todo-related components
-│   │   ├── ui/              # shadcn/ui components
-│   │   └── providers/       # Context providers
-│   ├── lib/
-│   │   ├── actions/         # Server actions
-│   │   ├── validations/     # Zod schemas
-│   │   ├── auth.ts          # NextAuth configuration
-│   │   ├── db.ts            # Prisma client
-│   │   ├── utils.ts         # Utility functions
-│   │   └── constants.ts     # App constants
-│   ├── types/               # TypeScript types
-│   └── middleware.ts        # Next.js middleware
-├── public/                  # Static assets
-├── .env.example            # Environment variables template
-├── next.config.js          # Next.js configuration
-├── tailwind.config.ts      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-└── package.json            # Dependencies
+│   ├── schema.prisma     # Database schema
+│   └── seed.ts           # Seed data
+└── actions/              # Server Actions
 ```
 
-## Available Scripts
+## API Reference
 
-```bash
-# Development
-npm run dev              # Start development server
+### Server Actions
 
-# Building
-npm run build           # Build for production
-npm run start           # Start production server
+The application uses Next.js Server Actions instead of traditional REST APIs.
 
-# Database
-npm run db:generate     # Generate Prisma Client
-npm run db:push         # Push schema to database
-npm run db:seed         # Seed database with sample data
-npm run db:studio       # Open Prisma Studio (database GUI)
+#### Todo Actions
 
-# Code Quality
-npm run lint            # Run ESLint
+```typescript
+// Create a todo
+import { createTodo } from '@/actions/todos'
+
+await createTodo({
+  title: "Complete project",
+  description: "Finish the todo app",
+  priority: "HIGH",
+  dueDate: new Date("2025-12-31"),
+  tags: ["work", "urgent"]
+})
+
+// Update a todo
+import { updateTodo } from '@/actions/todos'
+
+await updateTodo(todoId, {
+  title: "Updated title",
+  completed: true
+})
+
+// Delete a todo (soft delete)
+import { deleteTodo } from '@/actions/todos'
+
+await deleteTodo(todoId)
+
+// Get todos with filters
+import { getTodos } from '@/actions/todos'
+
+const todos = await getTodos({
+  completed: false,
+  priority: "HIGH",
+  search: "project"
+})
+```
+
+#### Sharing Actions
+
+```typescript
+// Share a todo
+import { shareTodo } from '@/actions/sharing'
+
+await shareTodo(todoId, {
+  email: "user@example.com",
+  permission: "EDIT" // or "VIEW"
+})
+
+// Remove share
+import { removeShare } from '@/actions/sharing'
+
+await removeShare(shareId)
 ```
 
 ## Database Schema
 
-### User
-- Authentication and user management
-- Supports both email/password and OAuth
+```prisma
+model Todo {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  priority    Priority  @default(MEDIUM)
+  dueDate     DateTime?
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  subtasks    Subtask[]
+  tags        Tag[]
+  shares      Share[]
+}
 
-### Todo
-- Core todo item with title, description, status, priority
-- Support for due dates, categories, tags
-- Soft delete functionality
-- Order management for custom sorting
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+```
 
-### Subtask
-- Nested tasks within a todo
-- Track completion status independently
+## Testing
 
-### Category & Tag
-- Organize todos with categories and tags
-- Custom colors and icons
+### Running Tests
 
-### SharedTodo
-- Share todos with other users
-- View or edit permissions
+```bash
+# Install test dependencies
+npm install -D vitest @testing-library/react @testing-library/jest-dom
 
-### Activity
-- Log all todo-related actions
-- Track created, updated, completed, deleted, shared events
+# Run unit tests
+npm run test
 
-## Features Documentation
+# Run with coverage
+npm run test:coverage
 
-### Authentication
-- Email/password registration and login
-- Google OAuth integration
-- Protected routes with middleware
-- Session management with NextAuth.js
+# Run E2E tests (requires Playwright)
+npm run test:e2e
+```
 
-### Todo Management
-- **Create:** Add new todos with title, description, priority, due date
-- **Update:** Edit any aspect of a todo
-- **Delete:** Soft delete (moves to trash)
-- **Complete:** Toggle completion status
-- **Filter:** By status, priority, category, tag, date range
-- **Search:** Full-text search across title and description
+### Test Structure
 
-### Categories & Tags
-- Create custom categories with colors and icons
-- Add multiple tags to todos
-- Filter and organize by categories and tags
+```
+tests/
+├── unit/
+│   ├── actions/          # Server action tests
+│   ├── components/       # Component tests
+│   └── lib/              # Utility tests
+├── integration/
+│   └── api/              # API integration tests
+└── e2e/
+    ├── auth.spec.ts      # Auth flow tests
+    └── todos.spec.ts     # Todo CRUD tests
+```
 
-### Subtasks
-- Add unlimited subtasks to any todo
-- Track individual subtask completion
-- View progress (e.g., 3/5 subtasks completed)
+### Example Test
 
-### Sharing
-- Share todos with other users via email
-- Set permissions (View or Edit)
-- Track who todos are shared with
-- Activity logging for sharing events
+```typescript
+// tests/unit/actions/todos.test.ts
+import { describe, it, expect } from 'vitest'
+import { createTodo, getTodos } from '@/actions/todos'
 
-### Activity Log
-- Automatic logging of all actions
-- View recent activity across all todos
-- Filter by action type
+describe('Todo Actions', () => {
+  it('should create a new todo', async () => {
+    const todo = await createTodo({
+      title: 'Test Todo',
+      priority: 'HIGH'
+    })
 
-### Trash & Recovery
-- Soft delete sends todos to trash
-- Restore deleted todos
-- Permanently delete individual todos
-- Empty entire trash at once
+    expect(todo.title).toBe('Test Todo')
+    expect(todo.priority).toBe('HIGH')
+    expect(todo.completed).toBe(false)
+  })
 
-### Themes
-- Light and dark mode
-- System preference detection
-- Smooth theme transitions
-- Persistent user preference
+  it('should filter todos by priority', async () => {
+    const todos = await getTodos({ priority: 'HIGH' })
 
-## API Architecture
+    expect(todos.every(t => t.priority === 'HIGH')).toBe(true)
+  })
+})
+```
 
-This application uses **Next.js Server Actions** for all data mutations and queries, providing:
-- Type-safe API calls
-- Automatic revalidation
-- Built-in error handling
-- Progressive enhancement
+## Accessibility
 
-### Key Server Actions
+### Implemented Features
+- Semantic HTML structure
+- Keyboard navigation support
+- Focus management
+- Screen reader compatible
+- Color contrast compliance
 
-**Todo Actions** (`/lib/actions/todo.actions.ts`):
-- `createTodo()` - Create new todo
-- `updateTodo()` - Update existing todo
-- `deleteTodo()` - Soft or permanent delete
-- `restoreTodo()` - Restore from trash
-- `getTodos()` - Get todos with filters
-- `reorderTodos()` - Update todo order
+### Accessibility Checklist
 
-**Auth Actions** (`/lib/actions/auth.actions.ts`):
-- `register()` - User registration
-- `login()` - User login
+- [x] All interactive elements are keyboard accessible
+- [x] Form inputs have associated labels
+- [x] Error messages are announced to screen readers
+- [x] Color is not the only means of conveying information
+- [x] Touch targets are at least 44x44 pixels
+- [ ] Skip navigation link (planned)
+- [ ] ARIA live regions for dynamic content (planned)
 
-**Share Actions** (`/lib/actions/share.actions.ts`):
-- `shareTodo()` - Share todo with user
-- `updateSharePermission()` - Update permissions
-- `removeShare()` - Revoke sharing
+### Testing Accessibility
 
-**Activity Actions** (`/lib/actions/activity.actions.ts`):
-- `getActivities()` - Get activity log
+```bash
+# Using axe-core
+npm install -D @axe-core/react
 
-## Security Features
+# Add to your test setup
+import { axe, toHaveNoViolations } from 'jest-axe'
+expect.extend(toHaveNoViolations)
+```
 
-- 🔒 Server-side authentication
-- 🛡️ Protected routes with middleware
-- ✅ Input validation with Zod
-- 🔐 Password hashing with bcrypt
-- 🚫 SQL injection prevention with Prisma
-- 🎫 CSRF protection with NextAuth
-- 🔑 Secure session management
+## Database Migrations
 
-## Performance Optimizations
+### Development
 
-- ⚡ Server Components for faster initial load
-- 🎯 Selective hydration
-- 🗄️ Database query optimization with Prisma
-- 📦 Code splitting with Next.js App Router
-- 🖼️ Optimized images with next/image
-- 🎨 Tailwind CSS for minimal CSS bundle
+```bash
+# Create migration
+npx prisma migrate dev --name add_feature
+
+# Apply migrations
+npx prisma migrate dev
+
+# Reset database
+npx prisma migrate reset
+```
+
+### Production
+
+```bash
+# Deploy migrations
+npx prisma migrate deploy
+
+# Generate client
+npx prisma generate
+```
+
+### Rollback Strategy
+
+1. Create a backup before migration: `pg_dump -U user todo_db > backup.sql`
+2. Apply migration: `npx prisma migrate deploy`
+3. If issues occur: `psql -U user todo_db < backup.sql`
 
 ## Deployment
 
-### Deploy to Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy
+### Vercel (Recommended)
 
 ```bash
-npm run build
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
 ```
 
-### Deploy to Other Platforms
+### Docker
 
-1. Build the application:
-```bash
-npm run build
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
 ```
 
-2. Set environment variables on your hosting platform
+### Production Checklist
 
-3. Start the production server:
-```bash
-npm start
-```
-
-## Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `NEXTAUTH_URL` | Application URL | Yes |
-| `NEXTAUTH_SECRET` | Secret for NextAuth.js | Yes |
-| `GOOGLE_CLIENT_ID` | Google OAuth Client ID | No |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret | No |
-
-## Optional Enhancements
-
-Here are some features you could add to extend this application:
-
-### 1. Real-time Collaboration
-- WebSocket integration for live updates
-- Presence indicators (who's viewing)
-- Real-time cursors for shared todos
-
-### 2. Notifications
-- Browser push notifications
-- Email notifications for due dates
-- Reminders system
-
-### 3. Advanced Filtering
-- Saved filters/views
-- Custom filter combinations
-- Smart filters (overdue, due today, etc.)
-
-### 4. File Attachments
-- Upload files to todos
-- Image previews
-- File storage with S3 or similar
-
-### 5. Calendar View
-- Month/week/day views
-- Drag & drop between dates
-- iCal export
-
-### 6. Recurring Todos
-- Daily, weekly, monthly patterns
-- Custom recurrence rules
-- Skip/complete specific instances
-
-### 7. Team Features
-- Team workspaces
-- Role-based access control
-- Team activity feeds
-
-### 8. Analytics
-- Productivity metrics
-- Completion rates
-- Time tracking
-
-### 9. Mobile App
-- React Native app
-- PWA with offline support
-- Native notifications
-
-### 10. Integrations
-- Google Calendar sync
-- Slack notifications
-- Email import (create todos via email)
-
-## Troubleshooting
-
-### Database Connection Issues
-
-If you see database connection errors:
-1. Verify PostgreSQL is running
-2. Check DATABASE_URL in `.env`
-3. Ensure database exists: `createdb todo_db`
-4. Run `npm run db:push`
-
-### Build Errors
-
-If you encounter build errors:
-1. Delete `.next` folder and `node_modules`
-2. Run `npm install`
-3. Run `npm run db:generate`
-4. Run `npm run build`
-
-### Authentication Issues
-
-If login/registration doesn't work:
-1. Verify NEXTAUTH_SECRET is set
-2. Check NEXTAUTH_URL matches your domain
-3. Clear browser cookies and try again
+- [ ] Set all environment variables
+- [ ] Run database migrations
+- [ ] Enable HTTPS
+- [ ] Set up monitoring (Sentry, LogRocket)
+- [ ] Configure CDN for static assets
+- [ ] Set up database backups
+- [ ] Enable rate limiting
+- [ ] Review security headers
 
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Write tests for new functionality
+4. Ensure all tests pass (`npm run test`)
+5. Run linting (`npm run lint`)
+6. Commit changes (`git commit -m 'Add new feature'`)
+7. Push to branch (`git push origin feature/new-feature`)
+8. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Use Conventional Commits format
+- Write tests for new features
+- Update documentation as needed
+- Ensure accessibility compliance
+
+## Known Limitations
+
+- Real-time collaboration requires page refresh (WebSocket planned)
+- Attachments not yet supported
+- Mobile app not available
+- Bulk operations limited to 50 items
+
+## Roadmap
+
+- [ ] Real-time collaboration with WebSockets
+- [ ] File attachments
+- [ ] Calendar view
+- [ ] Recurring tasks
+- [ ] Team workspaces
+- [ ] Mobile app (React Native)
+- [ ] Slack/Discord integration
 
 ## License
 
-This project is open source and available under the MIT License.
-
-## Support
-
-For issues and questions:
-- Open an issue on GitHub
-- Check existing documentation
-- Review closed issues for solutions
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-- Next.js team for the amazing framework
-- shadcn for the beautiful UI components
-- Vercel for hosting solutions
-- Prisma for the excellent ORM
-
----
-
-**Built with ❤️ using Next.js, React, and TypeScript**
+- [Next.js](https://nextjs.org/) for the amazing framework
+- [shadcn/ui](https://ui.shadcn.com/) for beautiful components
+- [Prisma](https://prisma.io/) for the excellent ORM
